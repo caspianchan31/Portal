@@ -1,0 +1,90 @@
+name: 🐛 Bug 报告
+description: 报告一个 Bug 帮助我们改进
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您花时间报告 Bug！请尽可能详细地填写以下信息。
+
+  - type: input
+    id: version
+    attributes:
+      label: Portal 版本
+      description: 您使用的 Portal 版本号
+      placeholder: "例如: 1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    id: macos-version
+    attributes:
+      label: macOS 版本
+      description: 您的 macOS 系统版本
+      placeholder: "例如: macOS 14.2 (Sonoma)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ide
+    attributes:
+      label: 相关 IDE
+      description: 问题涉及哪个 IDE？
+      multiple: true
+      options:
+        - Cursor
+        - Antigravity
+        - VS Code
+        - JetBrains IDE
+        - 其他
+        - 不适用
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug 描述
+      description: 清晰简洁地描述这个 Bug
+      placeholder: 告诉我们发生了什么...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 预期行为
+      description: 您期望发生什么？
+      placeholder: 描述预期的正确行为...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 如何复现这个问题？
+      placeholder: |
+        1. 打开 Portal
+        2. 点击 '...'
+        3. 看到错误 '...'
+    validations:
+      required: true
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: 截图
+      description: 如果可能，请添加截图帮助解释问题
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志
+      description: 相关的错误日志或控制台输出
+      render: shell
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 附加信息
+      description: 其他有助于诊断问题的信息
