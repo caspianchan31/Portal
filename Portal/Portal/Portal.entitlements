@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Sandbox -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    
+    <!-- 网络权限 - 用于监控 AI API 调用 -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    
+    <!-- 读取用户选择的文件 -->
+    <key>com.apple.security.files.user-selected.read-only</key>
+    <true/>
+    
+    <!-- 访问用户的 Application Support 目录 (用于读取 IDE 日志) -->
+    <!-- 以及 ~/.gemini 目录 (用于 Antigravity Artifacts 监控) -->
+    <!-- 以及 ~/.cursor 目录 (用于 Cursor AI 追踪数据库) -->
+    <key>com.apple.security.temporary-exception.files.home-relative-path.read-only</key>
+    <array>
+        <string>/Library/Application Support/Cursor/</string>
+        <string>/Library/Application Support/Code/</string>
+        <string>/.gemini/</string>
+        <string>/.cursor/</string>
+    </array>
+</dict>
+</plist>
