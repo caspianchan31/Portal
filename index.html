@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boss Console</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='42'%3E%F0%9F%91%94%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell sidebar-collapsed" id="appShell">
+      <aside class="sidebar panel">
+        <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-expanded="false" aria-label="Expand sidebar">
+          <span class="sidebar-toggle-icon"></span>
+        </button>
+        <div class="sidebar-brand">
+          <p class="eyebrow" data-i18n="sidebar_eyebrow">Executive Command Center</p>
+          <h1>Boss Console</h1>
+          <p data-i18n="sidebar_copy">Turn OpenClaw Gateway runtime into a sharper cockpit for AI teams.</p>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Sections">
+          <a href="#overview" data-i18n="nav_overview">Overview</a>
+          <a href="#stage" data-i18n="nav_stage">Agent Stage</a>
+          <a href="#detail" data-i18n="nav_inspector">Inspector</a>
+          <a href="#operations" data-i18n="nav_workspace">Workspace</a>
+        </nav>
+
+        <section class="sidebar-block sidebar-block-compact language-block">
+          <span class="label" data-i18n="language_label">Language</span>
+          <div class="language-switch" id="languageSwitch">
+            <button class="language-button" type="button" data-lang="en">EN</button>
+            <button class="language-button" type="button" data-lang="zh-CN">中文</button>
+          </div>
+        </section>
+
+        <section class="sidebar-block">
+          <span class="label" data-i18n="workspace_mode_label">Workspace Mode</span>
+          <strong data-i18n="workspace_mode_title">AI Team Cockpit</strong>
+          <p data-i18n="workspace_mode_copy">The left rail sets the tone. The workspace focuses on live status, agent stage, and coordination.</p>
+        </section>
+
+        <section class="sidebar-block sidebar-block-compact">
+          <span class="label" data-i18n="live_signals_label">Live Signals</span>
+          <div class="sidebar-tags">
+            <span>Gateway</span>
+            <span>Agents</span>
+            <span>Sessions</span>
+            <span>Presence</span>
+          </div>
+        </section>
+      </aside>
+
+      <div class="workspace">
+        <section class="hero-layout" id="overview">
+          <header class="topbar panel">
+            <div class="brand-block">
+              <p class="eyebrow" data-i18n="hero_eyebrow">Control Room</p>
+              <h2 data-i18n="hero_title">Boss overview for your AI team runtime.</h2>
+              <p class="brand-copy" data-i18n="hero_copy">Connect OpenClaw Gateway and turn sessions, nodes, presence, and channels into one stable AI team workspace.</p>
+            </div>
+            <div class="topbar-summary" id="heroMetrics"></div>
+          </header>
+
+          <section class="gateway-panel panel">
+            <section class="boss-identity">
+              <div class="identity-head">
+                <div>
+                  <span class="label" data-i18n="connection_status_label">Connection</span>
+                  <strong id="connectionBadge">Offline</strong>
+                </div>
+                <div>
+                  <span class="label" data-i18n="system_time_label">System Time</span>
+                  <strong id="currentTime">--:--</strong>
+                </div>
+              </div>
+
+              <form class="gateway-form" id="gatewayForm">
+                <input type="text" name="gatewayUser" value="operator" autocomplete="username" hidden />
+                <label>
+                  <span>Gateway URL</span>
+                  <input
+                    id="gatewayUrl"
+                    name="gatewayUrl"
+                    type="url"
+                    placeholder="wss://your-gateway-host:18789"
+                    autocomplete="url"
+                    required
+                  />
+                </label>
+                <label>
+                  <span>Token</span>
+                  <input
+                    id="gatewayToken"
+                    name="gatewayToken"
+                    type="password"
+                    placeholder="OPENCLAW_GATEWAY_TOKEN"
+                    autocomplete="current-password"
+                  />
+                </label>
+                <label>
+                  <span>Password</span>
+                  <input
+                    id="gatewayPassword"
+                    name="gatewayPassword"
+                    type="password"
+                    placeholder="OPENCLAW_GATEWAY_PASSWORD"
+                    autocomplete="current-password"
+                  />
+                </label>
+                <div class="gateway-actions">
+                  <button class="action-button primary-action" type="submit" id="connectButton" data-i18n="connect_button">Connect Gateway</button>
+                  <button class="action-button" id="refreshButton" type="button" data-i18n="refresh_button">Refresh Snapshot</button>
+                  <button class="action-button" id="disconnectButton" type="button" data-i18n="disconnect_button">Disconnect</button>
+                </div>
+              </form>
+
+              <p class="connection-hint" id="connectionHint"></p>
+            </section>
+          </section>
+        </section>
+
+        <section class="command-grid">
+          <section class="panel stage-panel" id="stage">
+            <div class="panel-head">
+              <div>
+                <p class="section-tag">Agent Stage</p>
+                <h2 data-i18n="agent_stage_title">OpenClaw Agent Stage</h2>
+              </div>
+              <div class="stage-toggle">
+                <span class="status-indicator live"></span>
+                <span id="stageStatusLabel">Waiting</span>
+              </div>
+            </div>
+
+            <div class="stage-grid" id="agentGrid"></div>
+          </section>
+
+          <aside class="panel detail-panel" id="detail">
+            <div class="panel-head">
+              <div>
+                <p class="section-tag" data-i18n="inspector_tag">Inspector</p>
+                <h2 id="detailName">CEO Assistant</h2>
+              </div>
+              <span class="detail-state" id="detailState">Standby</span>
+            </div>
+
+            <div class="detail-avatar" id="detailAvatar">
+              <div class="avatar-backdrop"></div>
+              <div class="avatar-core"></div>
+              <div class="avatar-ring"></div>
+            </div>
+
+            <div class="detail-copy">
+              <p id="detailRole">Owns tasks, approvals, and global reminders.</p>
+              <p id="detailBrief">Ready to summarize today's pace and key events.</p>
+            </div>
+
+            <div class="detail-metrics" id="detailMetrics"></div>
+
+            <section class="detail-block">
+              <div class="block-head">
+                <h3 data-i18n="current_tasks_title">Current Tasks</h3>
+                <span id="taskCount">0</span>
+              </div>
+              <ul class="task-list" id="taskList"></ul>
+            </section>
+
+            <section class="detail-block">
+              <div class="block-head">
+                <h3 data-i18n="actions_title">Actions</h3>
+              </div>
+              <div class="detail-actions">
+                <button class="action-button primary-action" id="refreshAgentButton" type="button" data-i18n="refresh_button">Refresh Snapshot</button>
+              </div>
+            </section>
+          </aside>
+        </section>
+
+        <section class="bottom-grid">
+          <section class="panel timeline-panel">
+            <div class="panel-head">
+              <div>
+                <p class="section-tag">Command Feed</p>
+                <h2 data-i18n="command_feed_title">Command Feed</h2>
+              </div>
+              <button class="panel-toggle" id="commandFeedToggle" type="button" aria-expanded="false">Expand</button>
+            </div>
+            <div class="timeline-body is-collapsed" id="timelineBody">
+              <div class="timeline-list" id="timelineList"></div>
+            </div>
+          </section>
+
+          <section class="panel workflow-panel">
+            <div class="panel-head">
+              <div>
+                <p class="section-tag">Runtime Surfaces</p>
+                <h2 data-i18n="runtime_surfaces_title">Runtime Surfaces</h2>
+              </div>
+            </div>
+            <div class="workflow-list" id="workflowList"></div>
+          </section>
+        </section>
+
+        <section class="management-grid" id="operations">
+          <section class="panel registry-panel">
+            <div class="panel-head">
+              <div>
+                <p class="section-tag">Agent Registry</p>
+                <h2 data-i18n="agent_registry_title">OpenClaw Agent Registry</h2>
+              </div>
+              <span class="workflow-meta" id="agentRegistryMeta">Waiting for config.get</span>
+            </div>
+
+            <form class="editor-form" id="agentEditorForm">
+              <div class="editor-grid">
+                <label>
+                  <span>Agent ID</span>
+                  <input id="agentIdInput" name="agentId" type="text" placeholder="e.g. approval-alpha" required />
+                  <small data-i18n="agent_id_help">Unique ID in multi-agent routing. Maps to dedicated session, workspace, and state storage.</small>
+                </label>
+                <label>
+                  <span data-i18n="agent_name_label">Display Name</span>
+                  <input id="agentNameInput" name="agentName" type="text" placeholder="e.g. Approval Alpha" required />
+                  <small data-i18n="agent_name_help">Human-readable name for the UI and `agents.list`.</small>
+                </label>
+                <label>
+                  <span data-i18n="agent_identity_label">SOUL.md Identity</span>
+                  <input id="agentIdentityInput" name="agentIdentity" type="text" placeholder="e.g. Approval Lead" />
+                  <small data-i18n="agent_identity_help">`SOUL.md` defines the identity, voice, and boundaries shown by this agent.</small>
+                </label>
+                <label>
+                  <span>Workspace</span>
+                  <input id="agentWorkspaceInput" name="agentWorkspace" type="text" placeholder="e.g. ~/.openclaw/workspace" />
+                  <small data-i18n="agent_workspace_help">Workspace root. This usually hosts `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `USER.md`, and `memory.md`.</small>
+                </label>
+                <label>
+                  <span>Agent Dir</span>
+                  <input id="agentDirInput" name="agentDir" type="text" placeholder="e.g. ~/.openclaw/agents/approval-alpha/agent" />
+                  <small data-i18n="agent_dir_help">Per-agent state directory for auth profiles, model registry, and per-agent config.</small>
+                </label>
+                <label>
+                  <span>Model</span>
+                  <input id="agentModelInput" name="agentModel" type="text" placeholder="inherit main agent, or enter gpt-5-mini / JSON" />
+                  <small data-i18n="agent_model_help">Leave blank to inherit from `main`, or provide `provider/model` or model JSON.</small>
+                </label>
+              </div>
+              <div class="editor-grid">
+                <label>
+                  <span data-i18n="agent_theme_label">Theme (Optional)</span>
+                  <input id="agentThemeInput" name="agentTheme" type="text" placeholder="e.g. finance-ops" />
+                  <small data-i18n="agent_theme_help">An optional product-side tag, not a required OpenClaw field.</small>
+                </label>
+                <label class="checkbox-field">
+                  <span data-i18n="agent_default_label">Default Agent</span>
+                  <div class="checkbox-row">
+                    <input id="agentDefaultInput" name="agentDefault" type="checkbox" />
+                    <small data-i18n="agent_default_help">Marks this agent as the default entry point.</small>
+                  </div>
+                </label>
+              </div>
+              <div class="form-actions">
+                <button class="action-button primary-action" id="agentSubmitButton" type="submit">Create Gateway Agent</button>
+                <button class="action-button" id="agentCancelButton" type="button">Cancel</button>
+              </div>
+            </form>
+
+            <div class="registry-list" id="agentRegistryList"></div>
+          </section>
+
+          <section class="panel todo-panel">
+            <div class="panel-head">
+              <div>
+                <p class="section-tag">Todo Board</p>
+                <h2 data-i18n="todo_board_title">Todo Board</h2>
+              </div>
+              <span class="workflow-meta" id="todoMeta">0 todos</span>
+            </div>
+
+            <form class="editor-form" id="todoEditorForm">
+              <div class="editor-grid">
+                <label>
+                  <span data-i18n="todo_title_label">Task Title</span>
+                  <input id="todoTitleInput" name="todoTitle" type="text" placeholder="e.g. Review approval queue" required />
+                </label>
+                <label>
+                  <span data-i18n="todo_owner_label">Owner</span>
+                  <select id="todoOwnerInput" name="todoOwner"></select>
+                </label>
+                <label>
+                  <span data-i18n="todo_status_label">Status</span>
+                  <select id="todoStatusInput" name="todoStatus">
+                    <option value="todo">todo</option>
+                    <option value="doing">doing</option>
+                    <option value="done">done</option>
+                  </select>
+                </label>
+                <label>
+                  <span data-i18n="todo_priority_label">Priority</span>
+                  <select id="todoPriorityInput" name="todoPriority">
+                    <option value="P1">P1</option>
+                    <option value="P2">P2</option>
+                    <option value="P3">P3</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                <span data-i18n="todo_notes_label">Notes</span>
+                <textarea
+                  id="todoNotesInput"
+                  name="todoNotes"
+                  rows="3"
+                  placeholder="Execution notes, dependencies, or deliverables."
+                ></textarea>
+              </label>
+              <div class="form-actions">
+                <button class="action-button primary-action" id="todoSubmitButton" type="submit">Create Todo</button>
+                <button class="action-button" id="todoCancelButton" type="button">Cancel</button>
+              </div>
+            </form>
+
+            <div class="todo-list" id="todoBoardList"></div>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="./assets/js/app.js"></script>
+  </body>
+</html>
